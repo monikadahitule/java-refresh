@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class ArrayListNames {
     public static void main(String[] args) {
@@ -17,7 +18,9 @@ public class ArrayListNames {
             System.out.println(name);
         }
 
-        Collections.sort(names);
+        //Collections.sort(names);
+        //names.sort(Comparator.naturalOrder());
+        names.sort(Comparator.reverseOrder());
         System.out.println("Length of ArrayList " + names.size());
 
         for (String name : names) {
