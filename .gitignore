@@ -37,3 +37,10 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Project files created by my programs ###
+.idea/
+report.txt
+testers.txt
+testers.json
+missing.txt
