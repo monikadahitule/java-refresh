@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 
@@ -57,11 +58,47 @@ public class ReportApp {
 
     }
 
+
+    private static List<String> buildReport(List<Student> students,int passMark){
+        List<String> lines = new ArrayList<>();
+        int studentSize = students.size();
+        lines.add("Total Students : " + studentSize);
+        int totalMarks = students.stream().mapToInt(Student::getMarks).sum();
+        lines.add("Total Marks : " + totalMarks);
+        double average = students.stream().mapToInt(Student::getMarks).average().orElse(0);
+        lines.add("Average Marks : " + String.format("%.2f", average));
+        //highest mark and name
+        students.stream().max(Comparator.comparingInt(Student::getMarks)).ifPresent(s->lines.add("Highest Marks:"+s.getName()+"("+s.getMarks()+")"));
+
+        //passed students in descending order
+        lines.add("Passed students (" + passMark + " or more) :");
+        List<Student> passed = students.stream().filter(s->s.getMarks() >= passMark).sorted(Comparator.comparingInt(Student::getMarks).reversed())
+                .toList();
+        if(passed.isEmpty()){
+            lines.add(" None");
+        }else {
+            passed.forEach(s->lines.add(" " +s.getName() + "(" + s.getMarks() + ")"));
+        }
+
+        //failed count--> student below passMark
+        lines.add("Failed count (less than " + passMark+ "): "+ students.stream().filter(s->s.getMarks()< passMark).count());
+
+
+        return lines;
+
+    }
+
     public static void main(String[] args) {
     List<Student> goodStudents = loadStudents("students.csv");
     goodStudents.forEach(Student::display);
     System.out.println("Good students count :" + goodStudents.size());
     int passMark = loadPassMark();
     System.out.println("Pass mark used: " + passMark);
+    System.out.println("*****************************");
+    List<String> lines = buildReport(goodStudents,passMark);
+    lines.forEach(System.out::println);
+
+    System.out.println("*****************************");
+    buildReport(new ArrayList<>(), 40).forEach(System.out::println);
     }
 }
