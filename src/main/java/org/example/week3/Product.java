@@ -1,5 +1,7 @@
 package org.example.week3;
 
+import java.util.Objects;
+
 public class Product{
     private String name;
     private double price;
@@ -26,5 +28,17 @@ public class Product{
     @Override
     public String toString(){
         return this.name + "(" + this.price + "," + this.category + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Double.compare(price, product.price) == 0 && Objects.equals(name, product.name) && Objects.equals(category, product.category);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, price, category);
     }
 }
